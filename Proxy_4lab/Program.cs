@@ -19,9 +19,9 @@ namespace laba4ProxyServer
                 
                 while (true)
                 {
-                    TcpClient Receiving = Expectant.AcceptTcpClient();
-                    Task ListenTask = new Task(() => Listen(Receiving));
-                    ListenTask.Start();
+                    TcpClient received = Expectant.AcceptTcpClient();
+                    Task listening = new Task(() => Listen(received));
+                    listening.Start();
                 }
             }
             catch (Exception ex)
@@ -33,16 +33,16 @@ namespace laba4ProxyServer
 
         private static void Listen(TcpClient client)
         {
-            NetworkStream browserStream = client.GetStream();
+            NetworkStream browser = client.GetStream();
             byte[] buf = new byte[65536];
-            while (browserStream.CanRead)
+            while (browser.CanRead)
             {
-                if (browserStream.DataAvailable)
+                if (browser.DataAvailable)
                 {
                     try
                     {
-                        int msgLength = browserStream.Read(buf, 0, buf.Length);
-                        ProcessRequest(buf, msgLength, browserStream);
+                        int message_length = browser.Read(buf, 0, buf.Length);
+                        RequestFunc(buf, message_length, browser);
                     }
                     catch (Exception ex)
                     {
@@ -58,44 +58,44 @@ namespace laba4ProxyServer
         private static byte[] GetPath(byte[] data)
         {
             string buffer = Encoding.UTF8.GetString(data);
-            Regex headerRegex = new Regex(@"http:\/\/[a-z0-9а-яё\:\.]*");
-            MatchCollection headers = headerRegex.Matches(buffer);
+            Regex regex_header = new Regex(@"http:\/\/[a-z0-9а-яё\:\.]*");
+            MatchCollection headers = regex_header.Matches(buffer);
             buffer = buffer.Replace(headers[0].Value, "");
             data = Encoding.UTF8.GetBytes(buffer);
             return data;
         }
 
-        private static void ProcessRequest(byte[] buf, int bufLength, NetworkStream browserStream)
+        private static void RequestFunc(byte[] buf, int bufLength, NetworkStream browser)
         {
             try
             {
-                char[] splitCharsArray = {'\r', '\n'};
-                string[] buffer = Encoding.UTF8.GetString(buf).Trim().Split(splitCharsArray);
+                char[] IFS = {'\r', '\n'};
+                string[] buffer = Encoding.UTF8.GetString(buf).Trim().Split(IFS);
                 string host = buffer.FirstOrDefault(x => x.Contains("Host"));
                 if (host != null)
                 {
                     host = host.Substring(host.IndexOf(":", StringComparison.Ordinal) + 2);
-                    string[] requestInfo = host.Trim().Split(new char[] {':'});
+                    string[] request_information = host.Trim().Split(new char[] {':'});
 
-                    string hostname = requestInfo[0];
-                    var sender = requestInfo.Length == 2
-                        ? new TcpClient(hostname, int.Parse(requestInfo[1]))
+                    string hostname = request_information[0];
+                    var sender = request_information.Length == 2
+                        ? new TcpClient(hostname, int.Parse(request_information[1]))
                         : new TcpClient(hostname, 80);
 
-                    NetworkStream serverStream = sender.GetStream();
-                    serverStream.Write(GetPath(buf), 0, bufLength);
+                    NetworkStream server = sender.GetStream();
+                    server.Write(GetPath(buf), 0, bufLength);
 
                     byte[] answer = new byte[65536];
-                    int length = serverStream.Read(answer, 0, answer.Length);
+                    int length = server.Read(answer, 0, answer.Length);
 
-                    string[] head = Encoding.UTF8.GetString(answer).Split(splitCharsArray);
-                    string ResponseCode = head[0].Substring(head[0].IndexOf(" ") + 1);
-                    Console.WriteLine(host + "  " + ResponseCode);
+                    string[] head = Encoding.UTF8.GetString(answer).Split(IFS);
+                    string codeOfAnswer = head[0].Substring(head[0].IndexOf(" ") + 1);
+                    Console.WriteLine(host + "  " + codeOfAnswer);
 
-                    browserStream.Write(answer, 0, length);
-                    serverStream.CopyTo(browserStream);
+                    browser.Write(answer, 0, length);
+                    server.CopyTo(browser);
 
-                    serverStream.Close();
+                    server.Close();
                 }
             }
             catch
@@ -104,7 +104,7 @@ namespace laba4ProxyServer
             }
             finally
             {
-                browserStream.Close();
+                browser.Close();
             }
         }
 
