@@ -42,7 +42,7 @@ namespace laba4ProxyServer
                     try
                     {
                         int message_length = browser.Read(buf, 0, buf.Length);
-                        RequestFunc(buf, message_length, browser);
+                        requestFunc(buf, message_length, browser);
                     }
                     catch (Exception ex)
                     {
@@ -55,17 +55,20 @@ namespace laba4ProxyServer
             client.Close();
         }
 
-        private static byte[] GetPath(byte[] data)
+        private static byte[] getAddress(byte[] data)
         {
             string buffer = Encoding.UTF8.GetString(data);
             Regex regex_header = new Regex(@"http:\/\/[a-z0-9а-яё\:\.]*");
+
             MatchCollection headers = regex_header.Matches(buffer);
+
             buffer = buffer.Replace(headers[0].Value, "");
             data = Encoding.UTF8.GetBytes(buffer);
+            
             return data;
         }
 
-        private static void RequestFunc(byte[] buf, int bufLength, NetworkStream browser)
+        private static void requestFunc(byte[] buf, int bufLength, NetworkStream browser)
         {
             try
             {
@@ -78,12 +81,11 @@ namespace laba4ProxyServer
                     string[] request_information = host.Trim().Split(new char[] {':'});
 
                     string hostname = request_information[0];
-                    var sender = request_information.Length == 2
-                        ? new TcpClient(hostname, int.Parse(request_information[1]))
-                        : new TcpClient(hostname, 80);
+                    var sender = request_information.Length == 2 ? new TcpClient(hostname, int.Parse(request_information[1]))
+                                                                 : new TcpClient(hostname, 80);
 
                     NetworkStream server = sender.GetStream();
-                    server.Write(GetPath(buf), 0, bufLength);
+                    server.Write(getAddress(buf), 0, bufLength);
 
                     byte[] answer = new byte[65536];
                     int length = server.Read(answer, 0, answer.Length);
