@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TCP_chat", "TCP_chat.csproj", "{96AFBE77-4237-4AB7-918E-4ED7B478B91E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chat_3", "Chat_3.csproj", "{53606175-33C7-4B5F-B2E2-58D9A869751A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{96AFBE77-4237-4AB7-918E-4ED7B478B91E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{96AFBE77-4237-4AB7-918E-4ED7B478B91E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{96AFBE77-4237-4AB7-918E-4ED7B478B91E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{96AFBE77-4237-4AB7-918E-4ED7B478B91E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53606175-33C7-4B5F-B2E2-58D9A869751A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53606175-33C7-4B5F-B2E2-58D9A869751A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53606175-33C7-4B5F-B2E2-58D9A869751A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53606175-33C7-4B5F-B2E2-58D9A869751A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {3D321040-156E-4629-9834-088F44517CE3}
+		SolutionGuid = {B8ADE919-B16A-490B-B9D9-04C5ACC89C13}
 	EndGlobalSection
 EndGlobal
